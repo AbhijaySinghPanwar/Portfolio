@@ -8,7 +8,7 @@ import { fieldState } from "@/components/scene/fieldState";
  *  height. Above centre, because sections here are shorter than the viewport:
  *  probing at the middle meant the next section was already dominant while the
  *  current one was still being read. */
-const PROBE = 0.4;
+export const PROBE = 0.4;
 
 /**
  * Maps scroll position onto the latent field's four resting states.

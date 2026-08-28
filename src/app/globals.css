@@ -166,6 +166,119 @@
     pointer-events: none;
   }
 
+  /* Scroll reveal ---------------------------------------------------------
+     Mask reveal upward: the clip edge starts at the top and travels up, so
+     content emerges from its own bottom edge. One curve, shared by section
+     titles and the portrait, so reveals across the page feel like one system. */
+  .reveal-up {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal-up.is-revealed {
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* Portrait --------------------------------------------------------------- */
+  .portrait {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-xs);
+  }
+
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Sits back at rest, comes forward on hover. */
+    filter: saturate(0.4);
+    transition: filter 0.5s ease;
+  }
+
+  .portrait:hover img,
+  .portrait:focus-within img {
+    filter: saturate(1);
+  }
+
+  /* Skills marquee ---------------------------------------------------------
+     Two identical tracks side by side inside one moving box. Translating that
+     box by exactly -50% lands the second copy where the first began, so the
+     loop is seamless. The trailing padding on each track is load-bearing: it
+     makes each track's width include the gap that follows it, so half the
+     inner width equals one full track pitch. Without it the seam drifts by
+     half a gap every cycle. */
+  .marquee {
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgb(0, 0, 0) 5%,
+      rgb(0, 0, 0) 95%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgb(0, 0, 0) 5%,
+      rgb(0, 0, 0) 95%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+
+  .marquee-inner {
+    display: flex;
+    width: max-content;
+    animation: marquee-left 45s linear infinite;
+  }
+
+  .marquee[data-dir="right"] .marquee-inner {
+    animation-name: marquee-right;
+  }
+
+  /* Only the hovered row stops. The other five keep moving. */
+  .marquee:hover .marquee-inner,
+  .marquee:focus-within .marquee-inner {
+    animation-play-state: paused;
+  }
+
+  .marquee-track {
+    display: flex;
+    flex: none;
+    gap: 8px;
+    padding-right: 8px;
+    margin: 0;
+    list-style: none;
+  }
+
+  /* Wordmark --------------------------------------------------------------
+     Reads as a wordmark, not a favicon. The nudge is optical: with
+     line-height 1 the em box centres lower than the cap of the "A", so the
+     glyph would otherwise float above the nav pill's centre line. */
+  .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1;
+    color: var(--bone);
+    transform: translateY(var(--logo-optical, 0.1em));
+  }
+
+  .nav-logo-dot {
+    width: 6px;
+    height: 6px;
+    flex: none;
+    border-radius: var(--radius-pill);
+    background: var(--ember);
+  }
+
   /* Hero type occlusion --------------------------------------------------- */
   .hero-stage {
     position: relative;
@@ -253,6 +366,49 @@
   }
 }
 
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* A marquee on a touch screen fights the page scroll, so below the tablet
+   breakpoint the chips become a static wrapped grid instead. */
+@media (max-width: 767px) {
+  .marquee {
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .marquee-inner {
+    width: 100%;
+    animation: none;
+  }
+
+  .marquee-track {
+    width: 100%;
+    flex-wrap: wrap;
+    padding-right: 0;
+  }
+
+  .marquee-track[data-clone="true"] {
+    display: none;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Reduced motion. The site must stay fully readable here.
 --------------------------------------------------------------------------- */
@@ -272,5 +428,37 @@
 
   [data-reveal] {
     opacity: 1 !important;
+  }
+
+  /* Reveals never run, so nothing may stay clipped out of existence. */
+  .reveal-up {
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  .portrait img {
+    filter: none !important;
+  }
+
+  /* Same static grid as the phone layout. */
+  .marquee {
+    overflow: visible !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+
+  .marquee-inner {
+    width: 100% !important;
+    animation: none !important;
+  }
+
+  .marquee-track {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    padding-right: 0 !important;
+  }
+
+  .marquee-track[data-clone="true"] {
+    display: none !important;
   }
 }

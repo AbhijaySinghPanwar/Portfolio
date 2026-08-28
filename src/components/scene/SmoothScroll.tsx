@@ -40,6 +40,19 @@ export default function SmoothScroll() {
     // 3. Measure once the wiring is live.
     ScrollTrigger.refresh();
 
+    // 4. Only now create triggers. Scroll reveals are declared in markup with
+    //    data-reveal-on-scroll and fire once, at 60% of the viewport.
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>("[data-reveal-on-scroll]").forEach((el) => {
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 60%",
+          once: true,
+          onEnter: () => el.classList.add("is-revealed"),
+        });
+      });
+    });
+
     // In-page anchors must go through Lenis or they bypass smoothing and
     // land at a position ScrollTrigger has not been told about.
     const onClick = (event: MouseEvent) => {
@@ -62,6 +75,7 @@ export default function SmoothScroll() {
 
     return () => {
       document.removeEventListener("click", onClick);
+      ctx.revert();
       gsap.ticker.remove(raf);
       lenis.destroy();
     };

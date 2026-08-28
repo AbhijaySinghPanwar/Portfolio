@@ -53,7 +53,7 @@ export default function RootLayout({
       <head>
         {/* If JS never runs, nothing may stay stuck in its pre-reveal state. */}
         <noscript>
-          <style>{`[data-hero-line]{transform:none!important}[data-reveal]{opacity:1!important}`}</style>
+          <style>{`[data-hero-line]{transform:none!important}[data-reveal]{opacity:1!important}.reveal-up{clip-path:none!important}`}</style>
         </noscript>
       </head>
       <body>
