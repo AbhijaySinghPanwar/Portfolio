@@ -9,6 +9,16 @@ import { fieldState } from "@/components/scene/fieldState";
 
 const RADIUS = 1.75;
 
+/** Pipeline lanes in the stream state, one per Tech Mahindra beat plus one. */
+const LANES = 5;
+const LANE_GAP = 0.66;
+const STREAM_SPAN = 8.0;
+
+/** The converged core is parked off-centre so it lands in the empty upper
+ *  right of the contact section rather than on top of the contact details. */
+const CORE_CENTRE: [number, number, number] = [1.15, 0.8, 0];
+const CORE_RADIUS = 0.34;
+
 /** Repulsion is specified in CSS pixels; the shader needs world units. */
 const REPEL_PX = 180;
 
@@ -24,15 +34,21 @@ export default function LatentField({ count, reducedMotion }: Props) {
 
   // Buffers are built once. Scroll states in P2 lerp between extra target
   // attributes rather than regenerating any of this.
+  // Buffers are built once. Scroll states lerp between these target
+  // attributes in the vertex shader; nothing here is rebuilt on scroll.
   const geometry = useMemo(() => {
     const positions = new Float32Array(count * 3);
+    const stream = new Float32Array(count * 3);
+    const collapse = new Float32Array(count * 3);
+    const core = new Float32Array(count * 3);
     const scales = new Float32Array(count);
     const seeds = new Float32Array(count);
     const dists = new Float32Array(count);
+    const lanes = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      // Uniform-in-sphere would be cbrt(u). A higher exponent pulls points
-      // toward the centre, which is what makes the core read as dense.
+      // --- sphere: uniform-in-sphere would be cbrt(u). A higher exponent
+      // pulls points toward the centre, which makes the core read as dense.
       const u = Math.random();
       const r = RADIUS * Math.pow(u, 0.62);
 
@@ -44,6 +60,28 @@ export default function LatentField({ count, reducedMotion }: Props) {
       positions[i * 3 + 1] = r * sinPhi * Math.sin(theta);
       positions[i * 3 + 2] = r * Math.cos(phi);
 
+      // --- stream: five lanes of records moving through a pipeline.
+      const lane = i % LANES;
+      lanes[i] = lane;
+      stream[i * 3] = Math.random() * STREAM_SPAN - STREAM_SPAN / 2;
+      stream[i * 3 + 1] =
+        (lane - (LANES - 1) / 2) * LANE_GAP + (Math.random() - 0.5) * 0.055;
+      stream[i * 3 + 2] = (Math.random() - 0.5) * 0.22;
+
+      // --- collapse: pushed off to the right, out of the reading column.
+      collapse[i * 3] = 2.35 + Math.random() * 1.0;
+      collapse[i * 3 + 1] = (Math.random() - 0.5) * 3.4;
+      collapse[i * 3 + 2] = (Math.random() - 0.5) * 0.9;
+
+      // --- core: one tight cluster.
+      const cr = CORE_RADIUS * Math.pow(Math.random(), 0.5);
+      const cTheta = Math.random() * Math.PI * 2;
+      const cPhi = Math.acos(2 * Math.random() - 1);
+      const cSinPhi = Math.sin(cPhi);
+      core[i * 3] = CORE_CENTRE[0] + cr * cSinPhi * Math.cos(cTheta);
+      core[i * 3 + 1] = CORE_CENTRE[1] + cr * cSinPhi * Math.sin(cTheta);
+      core[i * 3 + 2] = CORE_CENTRE[2] + cr * Math.cos(cPhi);
+
       scales[i] = 0.55 + Math.random() * 1.05;
       seeds[i] = Math.random();
       dists[i] = r / RADIUS;
@@ -51,10 +89,14 @@ export default function LatentField({ count, reducedMotion }: Props) {
 
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    g.setAttribute("aStream", new THREE.BufferAttribute(stream, 3));
+    g.setAttribute("aCollapse", new THREE.BufferAttribute(collapse, 3));
+    g.setAttribute("aCore", new THREE.BufferAttribute(core, 3));
     g.setAttribute("aScale", new THREE.BufferAttribute(scales, 1));
     g.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
     g.setAttribute("aDist", new THREE.BufferAttribute(dists, 1));
-    g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), RADIUS * 2);
+    g.setAttribute("aLane", new THREE.BufferAttribute(lanes, 1));
+    g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 8);
     return g;
   }, [count]);
 
@@ -62,7 +104,9 @@ export default function LatentField({ count, reducedMotion }: Props) {
     () => ({
       uTime: { value: 0 },
       uReveal: { value: reducedMotion ? 1 : 0 },
-      uProgress: { value: 0 },
+      uState: { value: 0 },
+      uBeat: { value: -1 },
+      uCoreCentre: { value: new THREE.Vector3(...CORE_CENTRE) },
       uMouse: { value: new THREE.Vector3(999, 999, 0) },
       uMouseStrength: { value: 0 },
       uMouseRadius: { value: 1 },
@@ -91,8 +135,15 @@ export default function LatentField({ count, reducedMotion }: Props) {
     // Clamped so a backgrounded tab does not resume with a huge jump.
     u.uTime.value += Math.min(delta, 0.05);
     u.uReveal.value = fieldState.reveal;
-    u.uProgress.value = fieldState.progress;
     u.uPulse.value = fieldState.pulse;
+    u.uBeat.value = fieldState.beat;
+
+    // Ease toward the state scroll asked for. Lenis already smooths ordinary
+    // scrolling; this only matters for anchor jumps, which would otherwise
+    // teleport the whole field in a single frame.
+    fieldState.state +=
+      (fieldState.targetState - fieldState.state) * (1 - Math.pow(0.0005, delta));
+    u.uState.value = fieldState.state;
 
     // World units per CSS pixel at the z = 0 plane.
     const worldPerPx = viewport.height / size.height;

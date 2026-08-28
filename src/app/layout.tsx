@@ -3,6 +3,7 @@ import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import Nav from "@/components/ui/Nav";
 import Scene from "@/components/scene/Scene";
+import SmoothScroll from "@/components/scene/SmoothScroll";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -59,6 +60,7 @@ export default function RootLayout({
         <a className="skip-link mono" href="#main">
           Skip to content
         </a>
+        <SmoothScroll />
         <Scene />
         <Nav />
         <div className="layer-content">{children}</div>

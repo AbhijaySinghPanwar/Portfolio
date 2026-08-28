@@ -31,7 +31,7 @@ export default function Contact() {
 
       <ul className="mt-16 grid gap-px sm:grid-cols-2 lg:grid-cols-5">
         {channels.map((channel) => (
-          <li key={channel.label} className="border-hairline border-t py-4">
+          <li key={channel.label} className="border-hairline border-t py-4 pr-6">
             <p className="mono">{channel.label}</p>
             <a
               href={channel.href}
