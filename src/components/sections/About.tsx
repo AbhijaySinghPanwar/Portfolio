@@ -12,8 +12,8 @@ export default function About() {
           <Image
             src="/portrait.jpg"
             alt={site.name}
-            width={1040}
-            height={1300}
+            width={828}
+            height={867}
             priority={false}
           />
         </figure>
