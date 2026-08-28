@@ -22,9 +22,9 @@ export default function About() {
         </figure>
 
         <div className="flex flex-col gap-12">
-          <p className="prose-body text-bone">{site.bio}</p>
+          <p className="prose-body scrim">{site.bio}</p>
 
-          <dl>
+          <dl className="scrim">
             {site.spec.map((row) => (
               <div
                 key={row.key}

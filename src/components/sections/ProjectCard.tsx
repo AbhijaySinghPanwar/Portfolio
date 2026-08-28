@@ -13,7 +13,7 @@ export default function ProjectCard({ project }: { project: Project }) {
     >
       {/* Same indent as the section eyebrows: a row index scrolling past the
           fixed wordmark collides with it otherwise. */}
-      <p data-eyebrow className="mono mono-500 pl-12 md:pl-16">
+      <p data-eyebrow className="mono mono-500 pl-12 md:pl-24">
         <span className="text-bone">04</span>
         <span className="px-2 opacity-40">/</span>
         <span className="text-bone">{project.index}</span>
@@ -43,9 +43,9 @@ export default function ProjectCard({ project }: { project: Project }) {
       <p className="serif-sub mt-5">{project.tagline}</p>
 
       <div className="mt-10 grid gap-10 md:grid-cols-12 md:gap-8">
-        <p className="prose-body text-muted md:col-span-7">{project.body}</p>
+        <p className="prose-body scrim md:col-span-7">{project.body}</p>
 
-        <ul className="chip-list content-start md:col-span-4 md:col-start-9">
+        <ul className="chip-list scrim content-start md:col-span-4 md:col-start-9">
           {project.stack.map((tech) => (
             <li key={tech} className="chip">
               {tech}

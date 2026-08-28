@@ -56,6 +56,7 @@ export default function Nav() {
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50" data-reveal="nav">
+      <span className="nav-scrim" aria-hidden="true" />
       <nav
         aria-label="Primary"
         className="shell flex items-center justify-between py-6"

@@ -68,7 +68,9 @@ export default function SmoothScroll() {
       if (!target) return;
 
       event.preventDefault();
-      lenis.scrollTo(target as HTMLElement, { offset: 0 });
+      // The nav is fixed, so landing a section at y=0 puts its first line
+      // underneath it.
+      lenis.scrollTo(target as HTMLElement, { offset: -104 });
     };
 
     document.addEventListener("click", onClick);

@@ -116,7 +116,7 @@ export default function Experience() {
                   key={beat.id}
                   data-beat={i}
                   aria-current={isActive ? "step" : undefined}
-                  className="border-hairline border-b pt-8 pb-10 md:border-r md:border-b-0 md:pr-8 md:pl-8 md:first:pl-0 md:last:border-r-0"
+                  className="border-hairline scrim border-b pt-8 pb-10 md:border-r md:border-b-0 md:pr-8 md:pl-8 md:first:pl-0 md:last:border-r-0"
                 >
                   <span
                     aria-hidden="true"
@@ -129,7 +129,7 @@ export default function Experience() {
                     }`}
                   />
                   <p
-                    className={`mono mono-500 transition-colors duration-500 ${
+                    className={`mono mono-500 transition-colors duration-[400ms] ${
                       isActive ? "text-iodine" : ""
                     }`}
                   >
@@ -139,13 +139,13 @@ export default function Experience() {
                       Advancing must not make three quarters of the section
                       unreadable. */}
                   <h3
-                    className={`serif-beat mt-4 transition-colors duration-500 ${
-                      isActive ? "text-bone" : "text-muted"
+                    className={`serif-beat mt-4 transition-colors duration-[400ms] ${
+                      isActive ? "text-bone" : "text-[var(--bone-55)]"
                     }`}
                   >
                     {beat.title}
                   </h3>
-                  <p className="prose-body text-muted mt-4 text-[length:var(--text-small)]">
+                  <p className="prose-body mt-4 text-[length:var(--text-small)]">
                     {beat.body}
                   </p>
                   <p

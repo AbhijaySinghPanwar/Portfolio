@@ -12,7 +12,7 @@ type Props = {
  */
 export default function SectionIndex({ index, label }: Props) {
   return (
-    <p data-eyebrow className="mono mono-500 pl-12 md:pl-16">
+    <p data-eyebrow className="mono mono-500 pl-12 md:pl-24">
       <span className="text-bone">{index}</span>
       <span className="px-2 opacity-40">/</span>
       <span>{label}</span>
