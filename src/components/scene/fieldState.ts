@@ -23,6 +23,8 @@ export const fieldState = {
   pulse: 0,
   /** Which pipeline lane is lit during the experience beats. -1 for none. */
   beat: -1,
+  /** 0 -> 1. Pushes the field back behind text-heavy sections. */
+  veil: 0,
 };
 
 export type FieldState = typeof fieldState;

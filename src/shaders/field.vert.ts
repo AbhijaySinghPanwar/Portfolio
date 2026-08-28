@@ -25,6 +25,7 @@ uniform float uMouseRadius;
 uniform float uSize;
 uniform float uPixelRatio;
 uniform float uBeat;
+uniform float uVeil;
 uniform vec3  uCoreCentre;
 
 attribute vec3  aStream;
@@ -107,6 +108,10 @@ void main() {
   dim = mix(dim, 0.6, wStream);
   dim = mix(dim, 0.15, wCollapse);
   dim = mix(dim, 0.85, wCore);
+
+  // Scroll-driven veil, independent of state: pushes the field back behind
+  // text that would otherwise read against a bright core.
+  dim *= mix(1.0, 0.15, uVeil);
 
   // Points wrap from one end of the stream to the other. Fading the ends
   // hides the jump, which would otherwise read as a flicker at the margins.

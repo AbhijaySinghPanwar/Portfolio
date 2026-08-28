@@ -110,6 +110,7 @@ export default function LatentField({ count, reducedMotion }: Props) {
       uReveal: { value: reducedMotion ? 1 : 0 },
       uState: { value: 0 },
       uBeat: { value: -1 },
+      uVeil: { value: 0 },
       uCoreCentre: { value: new THREE.Vector3(...CORE_CENTRE) },
       uMouse: { value: new THREE.Vector3(999, 999, 0) },
       uMouseStrength: { value: 0 },
@@ -133,6 +134,10 @@ export default function LatentField({ count, reducedMotion }: Props) {
     if (reducedMotion) {
       u.uReveal.value = 1;
       u.uMouseStrength.value = 0;
+      // The field renders one frame and never updates, so it cannot veil
+      // itself per section. A constant partial veil keeps every text block
+      // legible instead of leaving one section unreadable.
+      u.uVeil.value = 0.7;
       return;
     }
 
@@ -141,6 +146,7 @@ export default function LatentField({ count, reducedMotion }: Props) {
     u.uReveal.value = fieldState.reveal;
     u.uPulse.value = fieldState.pulse;
     u.uBeat.value = fieldState.beat;
+    u.uVeil.value = fieldState.veil;
 
     // Ease toward the state scroll asked for. Lenis already smooths ordinary
     // scrolling; this only matters for anchor jumps, which would otherwise

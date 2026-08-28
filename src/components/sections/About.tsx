@@ -7,8 +7,10 @@ export default function About() {
     <section id="about" className="above-field shell scroll-mt-32">
       <SectionIndex index="02" label="Background" />
 
-      <div className="mt-16 grid gap-12 md:grid-cols-12 md:gap-8">
-        <figure className="portrait reveal-up md:col-span-4" data-reveal-on-scroll>
+      {/* Explicit 38% track rather than a 12-column span, so the portrait's
+          share of the content width is stated rather than approximated. */}
+      <div className="mt-16 grid gap-12 md:grid-cols-[38%_1fr] md:gap-16">
+        <figure className="portrait reveal-up" data-reveal-on-scroll>
           <Image
             src="/portrait.jpg"
             alt={site.name}
@@ -16,9 +18,10 @@ export default function About() {
             height={867}
             priority={false}
           />
+          <span className="portrait-grain" aria-hidden="true" />
         </figure>
 
-        <div className="flex flex-col gap-12 md:col-span-7 md:col-start-6">
+        <div className="flex flex-col gap-12">
           <p className="prose-body text-bone">{site.bio}</p>
 
           <dl>

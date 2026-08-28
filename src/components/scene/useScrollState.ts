@@ -85,10 +85,22 @@ export function useScrollState(reducedMotion: boolean) {
 
     const update = () => {
       const scroll = window.scrollY;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const vh = window.innerHeight;
+      const max = document.documentElement.scrollHeight - vh;
 
       fieldState.progress = max > 0 ? Math.min(scroll / max, 1) : 0;
-      fieldState.targetState = sample(keys, scroll + window.innerHeight * PROBE);
+      fieldState.targetState = sample(keys, scroll + vh * PROBE);
+
+      // About is the one section whose copy sits directly on the sphere, and
+      // its mono spec sheet is the lowest-contrast text on the page. Push the
+      // field back in proportion to how much of the viewport About occupies,
+      // so the veil arrives and leaves with the reading rather than snapping.
+      const about = document.getElementById("about");
+      if (about) {
+        const r = about.getBoundingClientRect();
+        const overlap = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+        fieldState.veil = Math.min(1, overlap / (vh * 0.5));
+      }
     };
 
     const refresh = () => {

@@ -179,7 +179,13 @@
     clip-path: inset(0 0 0 0);
   }
 
-  /* Portrait --------------------------------------------------------------- */
+  /* Portrait --------------------------------------------------------------
+     The source is a studio ID photo on a light-grey backdrop, which on a
+     near-black page reads as a lit rectangle pasted onto the stage. The
+     treatment is what makes it belong: knocked to greyscale and darkened at
+     rest, tinted very slightly toward iodine so it shares the page's
+     temperature, grained so it does not look like clean stock, and faded out
+     along the bottom so the frame dissolves instead of ending on a hard edge. */
   .portrait {
     position: relative;
     display: block;
@@ -187,73 +193,70 @@
     aspect-ratio: 4 / 5;
     overflow: hidden;
     margin: 0;
-    border: 1px solid var(--hairline);
     border-radius: var(--radius-xs);
+    /* Bottom 18% dissolves into the page. */
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgb(0, 0, 0) 0%,
+      rgb(0, 0, 0) 82%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0, 0, 0) 0%,
+      rgb(0, 0, 0) 82%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 
   .portrait img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Sits back at rest, comes forward on hover. */
-    filter: saturate(0.4);
+    filter: grayscale(1) contrast(1.15) brightness(0.72);
     transition: filter 0.5s ease;
   }
 
   .portrait:hover img,
   .portrait:focus-within img {
-    filter: saturate(1);
+    filter: grayscale(0.15) contrast(1.15) brightness(0.95);
   }
 
-  /* Skills marquee ---------------------------------------------------------
-     Two identical tracks side by side inside one moving box. Translating that
-     box by exactly -50% lands the second copy where the first began, so the
-     loop is seamless. The trailing padding on each track is load-bearing: it
-     makes each track's width include the gap that follows it, so half the
-     inner width equals one full track pitch. Without it the seam drifts by
-     half a gap every cycle. */
-  .marquee {
-    position: relative;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgb(0, 0, 0) 5%,
-      rgb(0, 0, 0) 95%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    mask-image: linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgb(0, 0, 0) 5%,
-      rgb(0, 0, 0) 95%,
-      rgba(0, 0, 0, 0) 100%
-    );
+  /* Iodine temperature. Multiply so it deepens the shadows rather than
+     hazing the whole frame. */
+  .portrait::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--iodine);
+    mix-blend-mode: multiply;
+    opacity: 0.05;
+    pointer-events: none;
   }
 
-  .marquee-inner {
-    display: flex;
-    width: max-content;
-    animation: marquee-left 45s linear infinite;
+  /* Hairline frame, drawn over the image so it is not covered by it. */
+  .portrait::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-xs);
+    pointer-events: none;
   }
 
-  .marquee[data-dir="right"] .marquee-inner {
-    animation-name: marquee-right;
-  }
-
-  /* Only the hovered row stops. The other five keep moving. */
-  .marquee:hover .marquee-inner,
-  .marquee:focus-within .marquee-inner {
-    animation-play-state: paused;
-  }
-
-  .marquee-track {
-    display: flex;
-    flex: none;
-    gap: 8px;
-    padding-right: 8px;
-    margin: 0;
-    list-style: none;
+  /* Film grain. feTurbulence desaturated to a monochrome speckle, otherwise
+     the noise is coloured and fights the greyscale treatment. */
+  .portrait-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0.05;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+    background-repeat: repeat;
   }
 
   /* Wordmark --------------------------------------------------------------
