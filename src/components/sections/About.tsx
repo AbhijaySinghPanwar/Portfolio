@@ -4,7 +4,7 @@ import { site } from "@/data/site";
 
 export default function About() {
   return (
-    <section id="about" className="above-field shell scroll-mt-32">
+    <section id="about" data-veil="1" className="above-field shell scroll-mt-32">
       <SectionIndex index="02" label="Background" />
 
       {/* Explicit 38% track rather than a 12-column span, so the portrait's
@@ -28,7 +28,7 @@ export default function About() {
             {site.spec.map((row) => (
               <div
                 key={row.key}
-                className="border-hairline flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-4 first:border-t"
+                className="border-hairline flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-5 first:border-t"
               >
                 <dt className="mono">{row.key}</dt>
                 <dd className="serif-value text-right">{row.value}</dd>

@@ -21,6 +21,14 @@ const STREAM_SPAN = 8.0;
 const CORE_CENTRE: [number, number, number] = [1.15, 0.8, 0];
 const CORE_RADIUS = 0.34;
 
+/** The collapsed cluster, parked right of the reading column. A disc rather
+ *  than a tall band: at 45 degrees FOV from z=6 the viewport is 4.97 world
+ *  units tall, so a 0.82 radius measures ~35vh across once point size and
+ *  bloom are added, and stays inside the row rather than bleeding off the top
+ *  and bottom of the screen. */
+const CLUSTER_CENTRE: [number, number] = [2.85, 0];
+const CLUSTER_RADIUS = 0.82;
+
 /** Repulsion is specified in CSS pixels; the shader needs world units. */
 const REPEL_PX = 180;
 
@@ -72,10 +80,14 @@ export default function LatentField({ count, reducedMotion }: Props) {
         ((LANES - 1) / 2 - lane) * LANE_GAP + (Math.random() - 0.5) * 0.055;
       stream[i * 3 + 2] = (Math.random() - 0.5) * 0.22;
 
-      // --- collapse: pushed off to the right, out of the reading column.
-      collapse[i * 3] = 2.35 + Math.random() * 1.0;
-      collapse[i * 3 + 1] = (Math.random() - 0.5) * 3.4;
-      collapse[i * 3 + 2] = (Math.random() - 0.5) * 0.9;
+      // --- collapse: a bounded disc, right of the reading column.
+      // sqrt keeps the distribution even across the disc instead of piling
+      // every point into the centre.
+      const clusterR = CLUSTER_RADIUS * Math.sqrt(Math.random());
+      const clusterT = Math.random() * Math.PI * 2;
+      collapse[i * 3] = CLUSTER_CENTRE[0] + clusterR * Math.cos(clusterT);
+      collapse[i * 3 + 1] = CLUSTER_CENTRE[1] + clusterR * Math.sin(clusterT);
+      collapse[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
 
       // --- core: one tight cluster.
       const cr = CORE_RADIUS * Math.pow(Math.random(), 0.5);

@@ -11,16 +11,16 @@ export default function ProjectCard({ project }: { project: Project }) {
       className="group border-hairline scroll-mt-32 border-t py-16 md:min-h-[60vh]"
       style={{ ["--accent" as string]: accent }}
     >
-      <p className="mono mono-500">
+      {/* Same indent as the section eyebrows: a row index scrolling past the
+          fixed wordmark collides with it otherwise. */}
+      <p data-eyebrow className="mono mono-500 pl-12 md:pl-16">
         <span className="text-bone">04</span>
         <span className="px-2 opacity-40">/</span>
         <span className="text-bone">{project.index}</span>
       </p>
 
       <header className="mt-8 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4">
-        <h3 className="font-display text-bone text-[length:var(--text-title)] transition-colors duration-500 group-hover:text-[var(--accent)] md:text-[length:var(--text-display)]">
-          {project.name}
-        </h3>
+        <h3 className="serif-title">{project.name}</h3>
         {project.live && (
           <p className="mono text-ember flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="flex items-center gap-2">
@@ -40,16 +40,15 @@ export default function ProjectCard({ project }: { project: Project }) {
         )}
       </header>
 
-      <p className="serif-value text-muted mt-4">{project.tagline}</p>
+      <p className="serif-sub mt-5">{project.tagline}</p>
 
       <div className="mt-10 grid gap-10 md:grid-cols-12 md:gap-8">
         <p className="prose-body text-muted md:col-span-7">{project.body}</p>
 
-        <ul className="token-list content-start md:col-span-4 md:col-start-9">
+        <ul className="chip-list content-start md:col-span-4 md:col-start-9">
           {project.stack.map((tech) => (
-            <li key={tech} className="token-item">
-              <span className="token-name">{tech}</span>
-              <span className="token-dot" aria-hidden="true" />
+            <li key={tech} className="chip">
+              {tech}
             </li>
           ))}
         </ul>

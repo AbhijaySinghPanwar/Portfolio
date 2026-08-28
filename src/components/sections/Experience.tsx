@@ -77,7 +77,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section id="experience" ref={section} className="above-field">
+    <section id="experience" ref={section} data-veil="0.8" className="above-field">
       <div
         ref={stage}
         data-pin-stage=""
@@ -87,9 +87,7 @@ export default function Experience() {
           <SectionIndex index="03" label="Experience" />
 
           <header className="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
-            <h2 className="font-display text-bone text-[length:var(--text-title)]">
-              {role.company}
-            </h2>
+            <h2 className="serif-title">{role.company}</h2>
             <p className="mono">{role.period}</p>
           </header>
           <p className="mono mt-3">{role.title}</p>
@@ -141,7 +139,7 @@ export default function Experience() {
                       Advancing must not make three quarters of the section
                       unreadable. */}
                   <h3
-                    className={`serif-value mt-4 transition-colors duration-500 ${
+                    className={`serif-beat mt-4 transition-colors duration-500 ${
                       isActive ? "text-bone" : "text-muted"
                     }`}
                   >

@@ -1,19 +1,36 @@
 import SectionIndex from "@/components/ui/SectionIndex";
 import { skills, type Skill } from "@/data/skills";
 
-function SkillItem({ skill }: { skill: Skill }) {
+/**
+ * Chips per half-track. Short groups repeat more times, so that one half is
+ * always wider than the widest viewport and the loop seam can never be on
+ * screen at the same time as its own copy.
+ */
+const MIN_CHIPS_PER_TRACK = 18;
+
+function Chip({ skill }: { skill: Skill }) {
   return (
-    <li className="token-item">
-      <span className="token-name" data-evidenced={skill.evidenced}>
-        {skill.name}
-      </span>
+    <li className="chip">
+      {skill.evidenced && <span className="chip-dot" aria-hidden="true" />}
+      {skill.name}
       {skill.evidenced && (
         <span className="visually-hidden">, used in shipped work</span>
       )}
-      {/* Separator, not a marker. Keeps the sequence continuous across the
-          loop seam, where the last name meets the first again. */}
-      <span className="token-dot" aria-hidden="true" />
     </li>
+  );
+}
+
+function Track({ items, clone }: { items: Skill[]; clone?: boolean }) {
+  return (
+    <ul
+      className="marquee-track"
+      data-clone={clone ? "true" : undefined}
+      aria-hidden={clone ? "true" : undefined}
+    >
+      {items.map((skill, i) => (
+        <Chip key={`${skill.name}-${i}`} skill={skill} />
+      ))}
+    </ul>
   );
 }
 
@@ -22,42 +39,42 @@ export default function Skills() {
     <section id="skills" className="above-field shell scroll-mt-32">
       <SectionIndex index="05" label="Toolset" />
 
-      <p className="mono mt-6">
-        Brighter names are used in a project above
+      <p className="mono mt-6 flex items-center gap-2">
+        <span aria-hidden="true" className="chip-dot" />
+        marks something used in a project above
       </p>
 
-      <div className="mt-16 flex flex-col gap-10">
-        {skills.map((group, i) => (
-          <div
-            key={group.label}
-            className="border-hairline grid gap-4 border-t pt-6 md:grid-cols-12 md:gap-8"
-          >
-            {/* Label stays put in the gutter, outside the moving track. */}
-            <h3 className="mono mono-500 text-bone md:col-span-2 md:pt-3">
-              {group.label}
-            </h3>
+      <div className="mt-16 flex flex-col gap-8">
+        {skills.map((group, i) => {
+          const repeats = Math.max(
+            1,
+            Math.ceil(MIN_CHIPS_PER_TRACK / group.items.length),
+          );
+          const track = Array.from({ length: repeats }, () => group.items).flat();
 
+          return (
             <div
-              className="marquee md:col-span-10"
-              data-dir={i % 2 === 0 ? "left" : "right"}
+              key={group.label}
+              className="border-hairline flex flex-col gap-4 border-t pt-6 md:flex-row md:items-center md:gap-8"
             >
-              <div className="marquee-inner">
-                <ul className="marquee-track">
-                  {group.items.map((skill) => (
-                    <SkillItem key={skill.name} skill={skill} />
-                  ))}
-                </ul>
-                {/* Second copy is what makes the loop seamless. Hidden from
-                    assistive tech so the list is not read out twice. */}
-                <ul className="marquee-track" data-clone="true" aria-hidden="true">
-                  {group.items.map((skill) => (
-                    <SkillItem key={skill.name} skill={skill} />
-                  ))}
-                </ul>
+              {/* Fixed lane. The moving track never enters it, so the first
+                  chip cannot collide with the label at any width. */}
+              <h3 className="mono mono-500 text-bone md:w-[140px] md:shrink-0">
+                {group.label}
+              </h3>
+
+              <div
+                className="marquee md:min-w-0 md:flex-1"
+                data-dir={i % 2 === 0 ? "left" : "right"}
+              >
+                <div className="marquee-inner">
+                  <Track items={track} />
+                  <Track items={track} clone />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

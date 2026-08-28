@@ -98,14 +98,13 @@ export default function Hero() {
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
           <div className="flex flex-col gap-1">
             <p className="mono">{site.role}</p>
-            <p className="mono">{site.location}</p>
-          </div>
-          <div className="flex flex-col items-start gap-1 sm:items-end">
-            <p className="mono flex items-center gap-2">
-              <span aria-hidden="true">↓</span> Scroll
+            <p className="mono">
+              {site.location} · CGPA {site.cgpa}
             </p>
-            <p className="mono">CGPA {site.cgpa}</p>
           </div>
+          <p className="mono flex items-center gap-2">
+            <span aria-hidden="true">↓</span> Scroll
+          </p>
         </div>
       </div>
     </section>

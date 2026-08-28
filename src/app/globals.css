@@ -30,6 +30,12 @@
   --text-display: 4.5rem;
   --text-hero: clamp(3rem, 13vw, 15rem);
 
+  /* Serif now carries data as well as display, so hierarchy comes from size
+     rather than face. These four steps are the whole serif scale. */
+  --text-serif-title: clamp(2.75rem, 6vw, 5rem);
+  --text-serif-beat: 1.75rem;
+  --text-serif-value: 1.375rem;
+
   /* Radius. Pills or near-square. Nothing in between. */
   --radius-pill: 999px;
   --radius-xs: 2px;
@@ -266,23 +272,24 @@
      makes each track's width include the gap that follows it, so half the
      inner width equals one full track pitch. It must always equal the gap. */
   .marquee {
-    --marquee-gap: 2rem;
-    --token-gap: var(--marquee-gap);
-    --token-size: clamp(1.5rem, 3.2vw, 2.5rem);
+    /* Fade in absolute pixels, not a percentage. A percentage fade is too
+       narrow on a short row and a chip clips mid-word at the edge. */
+    --marquee-gap: 0.75rem;
+    --marquee-fade: 80px;
     position: relative;
     overflow: hidden;
     -webkit-mask-image: linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgb(0, 0, 0) 6%,
-      rgb(0, 0, 0) 94%,
+      rgba(0, 0, 0, 0) 0,
+      rgb(0, 0, 0) var(--marquee-fade),
+      rgb(0, 0, 0) calc(100% - var(--marquee-fade)),
       rgba(0, 0, 0, 0) 100%
     );
     mask-image: linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgb(0, 0, 0) 6%,
-      rgb(0, 0, 0) 94%,
+      rgba(0, 0, 0, 0) 0,
+      rgb(0, 0, 0) var(--marquee-fade),
+      rgb(0, 0, 0) calc(100% - var(--marquee-fade)),
       rgba(0, 0, 0, 0) 100%
     );
   }
@@ -313,66 +320,90 @@
     list-style: none;
   }
 
-  /* Named tokens ----------------------------------------------------------
-     Anything that names a thing: a technology, a spec value, a credential.
-     Display face, no box, ember dot as a separator rather than a marker, so a
-     sequence reads as one continuous line. Size and gap are set by whoever
-     uses it, which is the only difference between a project's stack and the
-     toolset rows. Mono is deliberately NOT used here; it stays on structural
-     labels so the serif has something to read against. */
-  .token-item {
-    display: flex;
-    align-items: center;
-    gap: var(--token-gap, 1rem);
-  }
-
-  .token-name {
+  /* Serif roles -----------------------------------------------------------
+     Display tracking of -0.03em is wrong below 2rem: it tightens the counters
+     and costs legibility at reading size. Anything under that step sits at
+     zero tracking with a 1.15 line-height. */
+  .serif-title {
     font-family: var(--font-display);
-    font-size: var(--token-size, var(--text-lead));
-    line-height: 1;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
+    font-size: var(--text-serif-title);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
     color: var(--bone);
-    transition: color 0.3s ease;
   }
 
-  /* Toolset only: a name with no project behind it recedes. */
-  .token-name[data-evidenced="false"] {
+  .serif-beat {
+    font-family: var(--font-display);
+    font-size: var(--text-serif-beat);
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+
+  /* Answers: spec-sheet values, contact values. */
+  .serif-value {
+    font-family: var(--font-display);
+    font-size: var(--text-serif-value);
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--bone) 90%, transparent);
+  }
+
+  /* Subtitles sit back from the answers they describe. */
+  .serif-sub {
+    font-family: var(--font-display);
+    font-size: var(--text-serif-value);
+    line-height: 1.15;
+    letter-spacing: 0;
     color: var(--muted);
   }
 
-  .token-item:hover .token-name {
-    color: var(--iodine);
+  /* Chips ------------------------------------------------------------------
+     Every technology name, in a project stack or the toolset. Mono, because
+     these are labels rather than answers. Spacing separates them; there are no
+     separator dots. The only dot is the evidence dot, and it appears inside a
+     chip only when that name is backed by real work. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 400;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+    color: var(--muted);
+    background: color-mix(in srgb, var(--graphite) 55%, transparent);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-xs);
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease;
   }
 
-  .token-dot {
+  .chip:hover {
+    border-color: var(--iodine);
+    color: var(--bone);
+  }
+
+  .chip-dot {
     flex: none;
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
     border-radius: var(--radius-pill);
     background: var(--ember);
   }
 
-  /* Wrapping token sequence, for stacks that sit in a column rather than a
-     marquee. */
-  .token-list {
+  .chip-list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--token-gap, 1rem);
+    gap: 8px;
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-
-  /* A single serif value against a mono key: spec-sheet rows, contact
-     channels, credentials, project taglines. */
-  .serif-value {
-    font-family: var(--font-display);
-    font-size: var(--text-lead);
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    color: var(--bone);
   }
 
   /* Wordmark --------------------------------------------------------------

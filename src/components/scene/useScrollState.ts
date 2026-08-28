@@ -91,16 +91,20 @@ export function useScrollState(reducedMotion: boolean) {
       fieldState.progress = max > 0 ? Math.min(scroll / max, 1) : 0;
       fieldState.targetState = sample(keys, scroll + vh * PROBE);
 
-      // About is the one section whose copy sits directly on the sphere, and
-      // its mono spec sheet is the lowest-contrast text on the page. Push the
-      // field back in proportion to how much of the viewport About occupies,
-      // so the veil arrives and leaves with the reading rather than snapping.
-      const about = document.getElementById("about");
-      if (about) {
-        const r = about.getBoundingClientRect();
+      // Any section that carries copy over the field opts in with data-veil,
+      // whose value is how far back to push it. Strength is scaled by how much
+      // of the viewport that section occupies, so the veil arrives and leaves
+      // with the reading rather than snapping at a boundary.
+      let veil = 0;
+      for (const el of document.querySelectorAll<HTMLElement>("[data-veil]")) {
+        const strength = Number(el.dataset.veil);
+        if (!Number.isFinite(strength)) continue;
+
+        const r = el.getBoundingClientRect();
         const overlap = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-        fieldState.veil = Math.min(1, overlap / (vh * 0.5));
+        veil = Math.max(veil, strength * Math.min(1, overlap / (vh * 0.5)));
       }
+      fieldState.veil = veil;
     };
 
     const refresh = () => {

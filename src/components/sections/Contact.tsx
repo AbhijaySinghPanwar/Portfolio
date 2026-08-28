@@ -24,18 +24,18 @@ export default function Contact() {
       <a
         href={`mailto:${site.email}`}
         data-magnetic=""
-        className="font-display text-bone hover:text-ember mt-16 block break-words text-[length:var(--text-display)] transition-colors duration-500 md:text-[length:var(--text-hero)]"
+        className="serif-title mt-12 block break-words"
       >
         Say hello
       </a>
 
-      <ul className="mt-16 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-12 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {channels.map((channel) => (
           <li key={channel.label} className="border-hairline border-t pt-4">
             <p className="mono">{channel.label}</p>
             <a
               href={channel.href}
-              className="serif-value hover:text-ember mt-3 block break-words transition-colors duration-300"
+              className="serif-value hover:text-ember mt-2 block break-words transition-colors duration-300"
             >
               {channel.value}
             </a>
