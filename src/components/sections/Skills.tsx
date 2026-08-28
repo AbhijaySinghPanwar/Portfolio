@@ -29,18 +29,15 @@ export default function Skills() {
                   key={skill.name}
                   className="mono border-hairline hover:border-iodine flex items-center gap-2 rounded-[var(--radius-xs)] border px-3 py-2 transition-colors duration-300"
                 >
-                  {skill.evidence.length > 0 && (
+                  {skill.evidenced && (
                     <span
                       aria-hidden="true"
                       className="bg-ember inline-block h-1 w-1 shrink-0 rounded-[var(--radius-pill)]"
                     />
                   )}
                   {skill.name}
-                  {skill.evidence.length > 0 && (
-                    <span className="visually-hidden">
-                      , used in {skill.evidence.length} project
-                      {skill.evidence.length > 1 ? "s" : ""}
-                    </span>
+                  {skill.evidenced && (
+                    <span className="visually-hidden">, used in shipped work</span>
                   )}
                 </li>
               ))}

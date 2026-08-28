@@ -7,7 +7,13 @@ const year = new Date().getFullYear();
 export default function Contact() {
   const channels = [
     { label: "Email", value: site.email, href: `mailto:${site.email}` },
+    {
+      label: "Phone",
+      value: site.phone,
+      href: `tel:${site.phone.replace(/\s/g, "")}`,
+    },
     { label: "GitHub", value: "AbhijaySinghPanwar", href: site.github },
+    { label: "LinkedIn", value: "abhijay-singh-panwar", href: site.linkedin },
     { label: "Résumé", value: "Download PDF", href: site.resume },
   ];
 
@@ -23,7 +29,7 @@ export default function Contact() {
         Say hello
       </a>
 
-      <ul className="mt-16 grid gap-px md:grid-cols-3">
+      <ul className="mt-16 grid gap-px sm:grid-cols-2 lg:grid-cols-5">
         {channels.map((channel) => (
           <li key={channel.label} className="border-hairline border-t py-4">
             <p className="mono">{channel.label}</p>

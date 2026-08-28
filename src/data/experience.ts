@@ -11,6 +11,8 @@ export type Role = {
   company: string;
   title: string;
   period: string;
+  /** Tools actually used. Read by the skills matrix to derive evidence dots. */
+  stack: string[];
   beats: Beat[];
 };
 
@@ -19,6 +21,7 @@ export const experience: Role[] = [
     company: "Tech Mahindra",
     title: "Data Engineering & Analytics Intern",
     period: "May 2026 — Jul 2026",
+    stack: ["SQL", "Apache Spark", "Power BI"],
     beats: [
       {
         id: "ingestion",

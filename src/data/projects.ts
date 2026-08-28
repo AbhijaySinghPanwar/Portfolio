@@ -3,8 +3,6 @@ export type Accent = "iodine" | "ember";
 export type ProjectLink = {
   label: string;
   href: string;
-  /** Marks a link whose URL is not yet known. Rendered as disabled. */
-  pending?: boolean;
 };
 
 export type Project = {
@@ -19,6 +17,10 @@ export type Project = {
   accent: Accent;
   /** Shown as a [LIVE] badge when the thing is deployed and reachable. */
   live: boolean;
+  /** Served over plain HTTP. Qualifies the live badge rather than hiding it. */
+  insecure?: boolean;
+  /** Free-tier host that sleeps when idle. Sets the visitor's expectation. */
+  coldStart?: string;
 };
 
 export const projects: Project[] = [
@@ -46,6 +48,7 @@ export const projects: Project[] = [
       "Docker",
       "AWS EC2",
       "RDS PostgreSQL",
+      "AWS SSM Parameter Store",
       "Nginx",
       "SQLAlchemy",
       "Alembic",
@@ -54,11 +57,12 @@ export const projects: Project[] = [
       "Gemini API",
     ],
     links: [
-      { label: "GitHub", href: "#", pending: true },
-      { label: "Live", href: "#", pending: true },
+      { label: "GitHub", href: "https://github.com/AbhijaySinghPanwar/resumeAI" },
+      { label: "Live", href: "http://32.236.237.82/" },
     ],
     accent: "ember",
     live: true,
+    insecure: true,
   },
   {
     id: "healthcare",
@@ -74,6 +78,7 @@ export const projects: Project[] = [
       "Prisma",
       "React",
       "JWT",
+      "Groq",
       "Google Calendar OAuth 2.0",
     ],
     links: [
@@ -89,13 +94,26 @@ export const projects: Project[] = [
     name: "Connect-4 LLM Arena",
     tagline: "Language models playing each other, out loud",
     body: "Four-plus models compete head to head while streaming their reasoning as they play. ELO ratings, a live leaderboard and match history across a hundred-plus games. A separate benchmark engine scores play against alpha-beta minimax and emits HTML reports, cutting manual model comparison time roughly in half.",
-    stack: ["Python", "Gradio", "OpenAI", "Gemini", "Groq", "MongoDB", "SQLite"],
+    stack: [
+      "Python",
+      "Gradio",
+      "OpenAI",
+      "Gemini",
+      "Groq",
+      "MongoDB",
+      "SQLite",
+      "Hugging Face Spaces",
+    ],
     links: [
-      { label: "GitHub", href: "#", pending: true },
-      { label: "HF Space", href: "#", pending: true },
+      { label: "GitHub", href: "https://github.com/AbhijaySinghPanwar/Connect-4" },
+      {
+        label: "HF Space",
+        href: "https://huggingface.co/spaces/Abhijay18/connect4-llm-arena",
+      },
     ],
     accent: "ember",
     live: true,
+    coldStart: "~30s cold start",
   },
   {
     id: "skillswap",
@@ -103,9 +121,22 @@ export const projects: Project[] = [
     name: "SkillSwap",
     tagline: "Peer-to-peer skill exchange",
     body: "Full-stack matching platform with profiles, automated skill matching across fifty-plus test users, real-time chat and exchange-request workflows. Auth is JWT and bcrypt with Google OAuth 2.0 across protected routes.",
-    stack: ["Node.js", "Express", "MongoDB", "JWT", "Google OAuth 2.0", "Bootstrap"],
-    links: [{ label: "GitHub", href: "#", pending: true }],
+    stack: [
+      "Node.js",
+      "Express",
+      "JavaScript",
+      "HTML/CSS",
+      "MongoDB",
+      "JWT",
+      "Google OAuth 2.0",
+      "Bootstrap",
+    ],
+    links: [
+      { label: "GitHub", href: "https://github.com/AbhijaySinghPanwar/skillswap" },
+      { label: "Live", href: "https://skillswap-b68k.onrender.com/" },
+    ],
     accent: "iodine",
-    live: false,
+    live: true,
+    coldStart: "~50s cold start",
   },
 ];

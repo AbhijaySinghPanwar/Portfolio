@@ -22,12 +22,20 @@ export default function ProjectCard({ project }: { project: Project }) {
           {project.name}
         </h3>
         {project.live && (
-          <p className="mono text-ember flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="bg-ember inline-block h-1.5 w-1.5 rounded-[var(--radius-pill)]"
-            />
-            Live
+          <p className="mono text-ember flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="flex items-center gap-2">
+              Live
+              <span
+                aria-hidden="true"
+                className="bg-ember inline-block h-1.5 w-1.5 rounded-[var(--radius-pill)]"
+              />
+            </span>
+            {/* Qualifiers on the badge, not warnings. Plain HTTP and free-tier
+                sleep are both things worth knowing before clicking through. */}
+            {project.insecure && <span className="text-muted">HTTP</span>}
+            {project.coldStart && (
+              <span className="text-muted">{project.coldStart}</span>
+            )}
           </p>
         )}
       </header>
@@ -52,24 +60,14 @@ export default function ProjectCard({ project }: { project: Project }) {
       <ul className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
         {project.links.map((link) => (
           <li key={link.label}>
-            {link.pending ? (
-              <span
-                className="mono opacity-40"
-                title="Link not published yet"
-                aria-disabled="true"
-              >
-                → {link.label} (pending)
-              </span>
-            ) : (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="mono text-bone hover:text-[var(--accent)] transition-colors duration-300"
-              >
-                → {link.label}
-              </a>
-            )}
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mono text-bone hover:text-[var(--accent)] transition-colors duration-300"
+            >
+              → {link.label}
+            </a>
           </li>
         ))}
       </ul>
