@@ -267,6 +267,8 @@
      inner width equals one full track pitch. It must always equal the gap. */
   .marquee {
     --marquee-gap: 2rem;
+    --token-gap: var(--marquee-gap);
+    --token-size: clamp(1.5rem, 3.2vw, 2.5rem);
     position: relative;
     overflow: hidden;
     -webkit-mask-image: linear-gradient(
@@ -311,41 +313,66 @@
     list-style: none;
   }
 
-  /* Skill names ------------------------------------------------------------
-     Display face at title scale, no box and no border. The ember dot after
-     each name is a separator, so the sequence reads as one continuous line
-     straight through the loop seam. Evidence moved from a dot to weight of
-     colour: names used in real work sit at full bone, the rest recede. */
-  .skill-item {
+  /* Named tokens ----------------------------------------------------------
+     Anything that names a thing: a technology, a spec value, a credential.
+     Display face, no box, ember dot as a separator rather than a marker, so a
+     sequence reads as one continuous line. Size and gap are set by whoever
+     uses it, which is the only difference between a project's stack and the
+     toolset rows. Mono is deliberately NOT used here; it stays on structural
+     labels so the serif has something to read against. */
+  .token-item {
     display: flex;
     align-items: center;
-    gap: var(--marquee-gap);
+    gap: var(--token-gap, 1rem);
   }
 
-  .skill-name {
+  .token-name {
     font-family: var(--font-display);
-    font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+    font-size: var(--token-size, var(--text-lead));
     line-height: 1;
     letter-spacing: -0.02em;
     white-space: nowrap;
-    color: var(--muted);
+    color: var(--bone);
     transition: color 0.3s ease;
   }
 
-  .skill-name[data-evidenced="true"] {
-    color: var(--bone);
+  /* Toolset only: a name with no project behind it recedes. */
+  .token-name[data-evidenced="false"] {
+    color: var(--muted);
   }
 
-  .skill-item:hover .skill-name {
+  .token-item:hover .token-name {
     color: var(--iodine);
   }
 
-  .skill-dot {
+  .token-dot {
     flex: none;
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: var(--radius-pill);
     background: var(--ember);
+  }
+
+  /* Wrapping token sequence, for stacks that sit in a column rather than a
+     marquee. */
+  .token-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--token-gap, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A single serif value against a mono key: spec-sheet rows, contact
+     channels, credentials, project taglines. */
+  .serif-value {
+    font-family: var(--font-display);
+    font-size: var(--text-lead);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--bone);
   }
 
   /* Wordmark --------------------------------------------------------------

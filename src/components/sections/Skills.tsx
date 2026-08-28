@@ -3,8 +3,8 @@ import { skills, type Skill } from "@/data/skills";
 
 function SkillItem({ skill }: { skill: Skill }) {
   return (
-    <li className="skill-item">
-      <span className="skill-name" data-evidenced={skill.evidenced}>
+    <li className="token-item">
+      <span className="token-name" data-evidenced={skill.evidenced}>
         {skill.name}
       </span>
       {skill.evidenced && (
@@ -12,7 +12,7 @@ function SkillItem({ skill }: { skill: Skill }) {
       )}
       {/* Separator, not a marker. Keeps the sequence continuous across the
           loop seam, where the last name meets the first again. */}
-      <span className="skill-dot" aria-hidden="true" />
+      <span className="token-dot" aria-hidden="true" />
     </li>
   );
 }

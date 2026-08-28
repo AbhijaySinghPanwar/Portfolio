@@ -141,7 +141,7 @@ export default function Experience() {
                       Advancing must not make three quarters of the section
                       unreadable. */}
                   <h3
-                    className={`mt-4 text-[length:var(--text-lead)] leading-tight transition-colors duration-500 ${
+                    className={`serif-value mt-4 transition-colors duration-500 ${
                       isActive ? "text-bone" : "text-muted"
                     }`}
                   >

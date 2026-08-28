@@ -40,18 +40,16 @@ export default function ProjectCard({ project }: { project: Project }) {
         )}
       </header>
 
-      <p className="mono mt-4">{project.tagline}</p>
+      <p className="serif-value text-muted mt-4">{project.tagline}</p>
 
       <div className="mt-10 grid gap-10 md:grid-cols-12 md:gap-8">
         <p className="prose-body text-muted md:col-span-7">{project.body}</p>
 
-        <ul className="flex flex-wrap content-start gap-2 md:col-span-4 md:col-start-9">
+        <ul className="token-list content-start md:col-span-4 md:col-start-9">
           {project.stack.map((tech) => (
-            <li
-              key={tech}
-              className="mono border-hairline rounded-[var(--radius-xs)] border px-2.5 py-1.5"
-            >
-              {tech}
+            <li key={tech} className="token-item">
+              <span className="token-name">{tech}</span>
+              <span className="token-dot" aria-hidden="true" />
             </li>
           ))}
         </ul>

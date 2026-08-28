@@ -28,10 +28,10 @@ export default function About() {
             {site.spec.map((row) => (
               <div
                 key={row.key}
-                className="border-hairline flex items-baseline justify-between gap-6 border-b py-3 first:border-t"
+                className="border-hairline flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-4 first:border-t"
               >
                 <dt className="mono">{row.key}</dt>
-                <dd className="mono text-bone text-right">{row.value}</dd>
+                <dd className="serif-value text-right">{row.value}</dd>
               </div>
             ))}
           </dl>

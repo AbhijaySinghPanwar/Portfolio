@@ -29,13 +29,13 @@ export default function Contact() {
         Say hello
       </a>
 
-      <ul className="mt-16 grid gap-px sm:grid-cols-2 lg:grid-cols-5">
+      <ul className="mt-16 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {channels.map((channel) => (
-          <li key={channel.label} className="border-hairline border-t py-4 pr-6">
+          <li key={channel.label} className="border-hairline border-t pt-4">
             <p className="mono">{channel.label}</p>
             <a
               href={channel.href}
-              className="mono text-bone hover:text-ember mt-2 block break-all transition-colors duration-300"
+              className="serif-value hover:text-ember mt-3 block break-words transition-colors duration-300"
             >
               {channel.value}
             </a>
@@ -45,10 +45,16 @@ export default function Contact() {
 
       <div className="border-hairline mt-24 border-t pt-6">
         <p className="mono mono-500 text-bone">Certifications</p>
-        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+        <ul className="mt-6 flex flex-col">
           {certifications.map((cert) => (
-            <li key={cert.name} className="mono">
-              {cert.issuer} {cert.name} · {cert.date}
+            <li
+              key={cert.name}
+              className="border-hairline flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-4 first:border-t"
+            >
+              <span className="serif-value">{cert.name}</span>
+              <span className="mono">
+                {cert.issuer} · {cert.date}
+              </span>
             </li>
           ))}
         </ul>
