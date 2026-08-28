@@ -141,7 +141,9 @@ export type Certification = {
   date: string;
 };
 
+// Newest first.
 export const certifications: Certification[] = [
+  { name: "Claude with the Anthropic API", issuer: "Anthropic", date: "Aug 2026" },
   { name: "100 Days of Python", issuer: "Udemy", date: "Jul 2026" },
   { name: "Full-Stack Web Development Bootcamp", issuer: "Udemy", date: "May 2026" },
   { name: "Generative AI with watsonx", issuer: "IBM", date: "Jun 2025" },
