@@ -9,8 +9,10 @@ import { fieldState } from "@/components/scene/fieldState";
 
 const RADIUS = 1.75;
 
-/** Pipeline lanes in the stream state, one per Tech Mahindra beat plus one. */
-const LANES = 5;
+/** Pipeline lanes in the stream state, exactly one per Tech Mahindra beat so
+ *  each beat owns a lane. The spec says "~5 lanes"; four makes the mapping
+ *  exact and avoids a lane that never lights. */
+const LANES = 4;
 const LANE_GAP = 0.66;
 const STREAM_SPAN = 8.0;
 
@@ -64,8 +66,10 @@ export default function LatentField({ count, reducedMotion }: Props) {
       const lane = i % LANES;
       lanes[i] = lane;
       stream[i * 3] = Math.random() * STREAM_SPAN - STREAM_SPAN / 2;
+      // Lane 0 sits at the top so the first beat lights the first lane a
+      // reader's eye lands on, scanning downward.
       stream[i * 3 + 1] =
-        (lane - (LANES - 1) / 2) * LANE_GAP + (Math.random() - 0.5) * 0.055;
+        ((LANES - 1) / 2 - lane) * LANE_GAP + (Math.random() - 0.5) * 0.055;
       stream[i * 3 + 2] = (Math.random() - 0.5) * 0.22;
 
       // --- collapse: pushed off to the right, out of the reading column.

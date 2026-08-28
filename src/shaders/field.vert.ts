@@ -104,7 +104,7 @@ void main() {
 
   // Per-state brightness. Collapse drops to roughly 15% so cards read cleanly.
   float dim = 1.0;
-  dim = mix(dim, 0.95, wStream);
+  dim = mix(dim, 0.6, wStream);
   dim = mix(dim, 0.15, wCollapse);
   dim = mix(dim, 0.85, wCore);
 
