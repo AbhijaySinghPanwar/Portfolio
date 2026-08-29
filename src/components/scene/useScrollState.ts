@@ -36,6 +36,9 @@ function buildKeyframes(): Keyframe[] {
   const work = document.querySelector("#work");
   const skills = document.querySelector("#skills");
   const contact = document.querySelector("#contact");
+  // Credentials sit between the toolset and contact. Optional, so the field
+  // still works if that block is ever removed.
+  const credentials = document.querySelector("#certifications");
   if (!experience || !work || !skills || !contact) return [];
 
   const top = (el: Element) => documentTop(el);
@@ -50,8 +53,10 @@ function buildKeyframes(): Keyframe[] {
     // once the pinned timeline stretches it.
     { at: bottom(experience) - vh * 0.15, state: 1 },
     { at: top(work) + vh * 0.2, state: 2 },
-    // Dimmed all the way through the project rows and the skills matrix.
-    { at: bottom(skills), state: 2 },
+    // Dimmed all the way through the project rows, the skills matrix and the
+    // credentials list. Converging across the credentials block instead left
+    // a half-formed cluster hanging over it.
+    { at: bottom(credentials ?? skills), state: 2 },
     { at: top(contact) + vh * 0.35, state: 3 },
   ];
 }

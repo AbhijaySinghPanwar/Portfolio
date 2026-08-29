@@ -1,5 +1,4 @@
 import SectionIndex from "@/components/ui/SectionIndex";
-import { certifications } from "@/data/skills";
 import { site } from "@/data/site";
 
 const year = new Date().getFullYear();
@@ -21,27 +20,10 @@ export default function Contact() {
     <section id="contact" className="above-field shell scroll-mt-32">
       <SectionIndex index="06" label="Contact" />
 
-      <div className="border-hairline mt-16 border-t pt-6">
-        <p className="mono mono-500 text-bone">Certifications</p>
-        <ul className="scrim mt-6 flex flex-col">
-          {certifications.map((cert) => (
-            <li
-              key={cert.name}
-              className="border-hairline flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-4 first:border-t"
-            >
-              <span className="serif-value">{cert.name}</span>
-              <span className="mono">
-                {cert.issuer} · {cert.date}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
       <a
         href={`mailto:${site.email}`}
         data-magnetic=""
-        className="serif-title border-hairline mt-24 block break-words border-t pt-16"
+        className="serif-title mt-16 block break-words"
       >
         Say hello
       </a>
