@@ -79,6 +79,34 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Light theme.
+   Only the seven palette tokens and the three text tints are overridden.
+   Tailwind v4 emits utilities as var(--color-*), so redefining them here
+   re-themes every utility on the page without touching a single component.
+
+   The site is dark by design, so dark is the default and light is opt-in;
+   the system preference is deliberately not followed.
+--------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  --color-ink: #f5f3ee;
+  --color-graphite: #e8e5de;
+  --color-hairline: #d5d1c7;
+  --color-bone: #14161a;
+  --color-muted: #6b6f77;
+  --color-iodine: #5b3fd9;
+  --color-ember: #c2410c;
+
+  /* Same percentages as the dark tints, resolved against the light ground,
+     except --muted-80. A light ground leaves --muted itself at only 4.55:1,
+     so lightening it at all drops subtitles to 3.15 and fails AA. Deepened
+     instead, which still reads clearly behind --bone. */
+  --bone-88: #2f3133;
+  --bone-55: #797979;
+  --muted-80: #63666e;
+}
+
+
+/* ---------------------------------------------------------------------------
    Base. Layered so that any Tailwind utility still wins over it.
 --------------------------------------------------------------------------- */
 @layer base {
@@ -242,6 +270,21 @@
     filter: grayscale(0.15) contrast(1.15) brightness(0.95);
   }
 
+  :root[data-theme="light"] .portrait img {
+    filter: grayscale(1) contrast(1.05) brightness(1.02);
+  }
+
+  :root[data-theme="light"] .portrait:hover img,
+  :root[data-theme="light"] .portrait:focus-within img {
+    filter: grayscale(0.15) contrast(1.05) brightness(1);
+  }
+
+  /* Iodine multiply over a light photograph muddies it; lighten instead. */
+  :root[data-theme="light"] .portrait::before {
+    mix-blend-mode: screen;
+    opacity: 0.04;
+  }
+
   /* Iodine temperature. Multiply so it deepens the shadows rather than
      hazing the whole frame. */
   .portrait::before {
@@ -354,7 +397,7 @@
     /* The outset has to exceed the blur radius, or the soft edge falls inside
        the text box and the plate never reaches full strength where it counts.
        Measured: at -14px with blur(14px) it only cut the field by 82%. */
-    inset: -30px -34px;
+    inset: -30px -16px;
     z-index: -1;
     background: color-mix(in srgb, var(--ink) 96%, transparent);
     filter: blur(9px);
@@ -439,6 +482,10 @@
     background: var(--ember);
   }
 
+  .chip-list .chip {
+    white-space: normal;
+  }
+
   .chip-list {
     display: flex;
     flex-wrap: wrap;
@@ -467,6 +514,18 @@
       rgba(0, 0, 0, 0) 100%
     );
     pointer-events: none;
+  }
+
+  /* Theme toggle -----------------------------------------------------------
+     The swatch shows the ground colour you would switch to. --bone is always
+     the opposite of the current background, so one rule works in both themes. */
+  .theme-swatch {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--hairline);
+    background: var(--bone);
   }
 
   /* Wordmark --------------------------------------------------------------

@@ -6,6 +6,7 @@ import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import LatentField from "@/components/scene/LatentField";
 import { fieldState } from "@/components/scene/fieldState";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { useTheme } from "@/lib/useTheme";
 
 /** Resolved once on mount. Re-resolving on resize would rebuild 40k buffers. */
 function resolveCount(): number {
@@ -80,6 +81,8 @@ function FieldFallback() {
 
 export default function Scene() {
   const reducedMotion = useReducedMotion();
+  const theme = useTheme();
+  const light = theme === "light";
   const [count, setCount] = useState<number | null>(null);
   const [webgl, setWebgl] = useState(true);
 
@@ -108,8 +111,8 @@ export default function Scene() {
         onCreated={({ gl }) => gl.setClearAlpha(0)}
       >
         <PointerBridge />
-        <LatentField count={count} reducedMotion={reducedMotion} />
-        {!reducedMotion && (
+        <LatentField count={count} reducedMotion={reducedMotion} light={light} />
+        {!reducedMotion && !light && (
           <EffectComposer multisampling={0}>
             <Bloom
               intensity={0.38}

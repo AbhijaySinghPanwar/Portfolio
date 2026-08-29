@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { fieldVert } from "@/shaders/field.vert";
@@ -18,7 +18,7 @@ const STREAM_SPAN = 8.0;
 
 /** The converged core is parked off-centre so it lands in the empty upper
  *  right of the contact section rather than on top of the contact details. */
-const CORE_CENTRE: [number, number, number] = [1.15, 0.8, 0];
+const CORE_CENTRE: [number, number, number] = [1.15, 1.25, 0];
 const CORE_RADIUS = 0.34;
 
 /** The collapsed cluster, parked right of the reading column. A disc rather
@@ -35,11 +35,21 @@ const REPEL_PX = 180;
 type Props = {
   count: number;
   reducedMotion: boolean;
+  light: boolean;
 };
 
-export default function LatentField({ count, reducedMotion }: Props) {
+/** Read a palette token from CSS so the shader cannot drift from the theme. */
+function token(name: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  return value || fallback;
+}
+
+export default function LatentField({ count, reducedMotion, light }: Props) {
   const points = useRef<THREE.Points>(null);
-  const material = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
   const { size, viewport } = useThree();
 
   // Buffers are built once. Scroll states in P2 lerp between extra target
@@ -130,6 +140,7 @@ export default function LatentField({ count, reducedMotion }: Props) {
       uSize: { value: 10 },
       uPixelRatio: { value: 1 },
       uPulse: { value: 0 },
+      uLight: { value: 0 },
       uIodine: { value: new THREE.Color("#7B5CFF") },
       uEmber: { value: new THREE.Color("#FF5A1F") },
     }),
@@ -138,8 +149,24 @@ export default function LatentField({ count, reducedMotion }: Props) {
     [],
   );
 
+  // Additive blending is invisible on a light ground: white plus anything is
+  // still white. The light theme has to composite normally, with the palette
+  // read back from CSS so there is one source of truth for the colours.
+  useEffect(() => {
+    const material = materialRef.current;
+    if (!material) return;
+
+    material.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending;
+    material.needsUpdate = true;
+
+    const u = material.uniforms;
+    u.uLight.value = light ? 1 : 0;
+    (u.uIodine.value as THREE.Color).set(token("--iodine", "#7B5CFF"));
+    (u.uEmber.value as THREE.Color).set(token("--ember", "#FF5A1F"));
+  }, [light]);
+
   useFrame((state, delta) => {
-    const u = material.current?.uniforms;
+    const u = materialRef.current?.uniforms;
     if (!u) return;
 
     // Reduced motion renders a single resolved frame and then stops animating.
@@ -188,7 +215,7 @@ export default function LatentField({ count, reducedMotion }: Props) {
   return (
     <points ref={points} geometry={geometry} frustumCulled={false}>
       <shaderMaterial
-        ref={material}
+        ref={materialRef}
         vertexShader={fieldVert}
         fragmentShader={fieldFrag}
         uniforms={uniforms}

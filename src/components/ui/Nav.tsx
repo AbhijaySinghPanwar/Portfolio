@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { site } from "@/data/site";
 import { useActiveSection } from "@/lib/useActiveSection";
 import { useMediaQuery } from "@/lib/useMediaQuery";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 /** Order follows page order. The nav is a table of contents, not a menu. */
 const items = [
@@ -73,6 +74,7 @@ export default function Nav() {
         {compact ? (
           <div className="relative">
             <div className="border-hairline bg-graphite/60 flex items-center gap-1 rounded-[var(--radius-pill)] border p-1 backdrop-blur-[12px]">
+              <ThemeToggle compact />
               <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
@@ -111,22 +113,27 @@ export default function Nav() {
             </ul>
           </div>
         ) : (
-          <ul className="border-hairline bg-graphite/60 flex items-center gap-1 rounded-[var(--radius-pill)] border p-1 backdrop-blur-[12px]">
-            {items.map((item) => (
-              <li key={item.href}>
-                <NavLink item={item} active={active === item.id} />
+          <div className="flex items-center gap-2">
+            <div className="border-hairline bg-graphite/60 flex items-center rounded-[var(--radius-pill)] border p-1 backdrop-blur-[12px]">
+              <ThemeToggle />
+            </div>
+            <ul className="border-hairline bg-graphite/60 flex items-center gap-1 rounded-[var(--radius-pill)] border p-1 backdrop-blur-[12px]">
+              {items.map((item) => (
+                <li key={item.href}>
+                  <NavLink item={item} active={active === item.id} />
+                </li>
+              ))}
+              <li>
+                <a
+                  href={site.resume}
+                  download
+                  className="mono text-bone border-hairline hover:border-iodine block rounded-[var(--radius-pill)] border px-4 py-2.5 transition-colors duration-300"
+                >
+                  résumé
+                </a>
               </li>
-            ))}
-            <li>
-              <a
-                href={site.resume}
-                download
-                className="mono text-bone border-hairline hover:border-iodine block rounded-[var(--radius-pill)] border px-4 py-2.5 transition-colors duration-300"
-              >
-                résumé
-              </a>
-            </li>
-          </ul>
+            </ul>
+          </div>
         )}
       </nav>
     </header>

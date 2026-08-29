@@ -29,21 +29,7 @@ export default function Contact() {
         Say hello
       </a>
 
-      <ul className="mt-12 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-        {channels.map((channel) => (
-          <li key={channel.label} className="border-hairline border-t pt-4">
-            <p className="mono">{channel.label}</p>
-            <a
-              href={channel.href}
-              className="serif-value hover:text-ember mt-2 block break-words transition-colors duration-300"
-            >
-              {channel.value}
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <div className="border-hairline mt-24 border-t pt-6">
+      <div className="border-hairline mt-16 border-t pt-6">
         <p className="mono mono-500 text-bone">Certifications</p>
         <ul className="mt-6 flex flex-col">
           {certifications.map((cert) => (
@@ -59,6 +45,20 @@ export default function Contact() {
           ))}
         </ul>
       </div>
+
+      <ul className="mt-24 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+        {channels.map((channel) => (
+          <li key={channel.label} className="border-hairline border-t pt-4">
+            <p className="mono">{channel.label}</p>
+            <a
+              href={channel.href}
+              className="serif-value hover:text-ember mt-2 block break-words transition-colors duration-300"
+            >
+              {channel.value}
+            </a>
+          </li>
+        ))}
+      </ul>
 
       <footer className="border-hairline mt-24 flex flex-wrap items-baseline justify-between gap-4 border-t py-8">
         <p className="mono">

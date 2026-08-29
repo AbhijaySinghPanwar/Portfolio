@@ -38,8 +38,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07080A",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#07080A" },
+    { media: "(prefers-color-scheme: light)", color: "#F5F3EE" },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -48,9 +51,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      // The inline script below stamps data-theme before React hydrates, so
+      // the attribute legitimately differs from the server markup. Scoped to
+      // this element only; mismatches anywhere else still surface.
+      suppressHydrationWarning
       className={`${instrumentSerif.variable} ${jetbrainsMono.variable} ${generalSans.variable}`}
     >
       <head>
+        {/* Runs before first paint. Without it a stored light preference
+            would flash the dark default for a frame on every load. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}",
+          }}
+        />
         {/* If JS never runs, nothing may stay stuck in its pre-reveal state. */}
         <noscript>
           <style>{`[data-hero-line]{transform:none!important}[data-reveal]{opacity:1!important}.reveal-up{clip-path:none!important}`}</style>
