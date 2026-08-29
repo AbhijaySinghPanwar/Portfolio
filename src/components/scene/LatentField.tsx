@@ -18,7 +18,7 @@ const STREAM_SPAN = 8.0;
 
 /** The converged core is parked off-centre so it lands in the empty upper
  *  right of the contact section rather than on top of the contact details. */
-const CORE_CENTRE: [number, number, number] = [1.27, -0.83, 0];
+const CORE_CENTRE: [number, number, number] = [1.27, 0.36, 0];
 const CORE_RADIUS = 0.34;
 
 /** The collapsed cluster, parked right of the reading column. A disc rather

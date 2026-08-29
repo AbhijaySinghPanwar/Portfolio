@@ -38,7 +38,15 @@ export default function Contact() {
         </ul>
       </div>
 
-      <ul className="scrim mt-24 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+      <a
+        href={`mailto:${site.email}`}
+        data-magnetic=""
+        className="serif-title border-hairline mt-24 block break-words border-t pt-16"
+      >
+        Say hello
+      </a>
+
+      <ul className="scrim mt-12 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {channels.map((channel) => (
           <li key={channel.label} className="border-hairline border-t pt-4">
             <p className="mono">{channel.label}</p>
@@ -51,14 +59,6 @@ export default function Contact() {
           </li>
         ))}
       </ul>
-
-      <a
-        href={`mailto:${site.email}`}
-        data-magnetic=""
-        className="serif-title border-hairline mt-24 block break-words border-t pt-16"
-      >
-        Say hello
-      </a>
 
       <footer className="border-hairline mt-24 flex flex-wrap items-baseline justify-between gap-4 border-t py-8">
         <p className="mono">
