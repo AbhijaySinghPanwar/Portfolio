@@ -26,6 +26,7 @@ uniform float uSize;
 uniform float uPixelRatio;
 uniform float uBeat;
 uniform float uVeil;
+uniform float uLight;
 uniform vec3  uCoreCentre;
 
 attribute vec3  aStream;
@@ -108,6 +109,11 @@ void main() {
   dim = mix(dim, 0.6, wStream);
   dim = mix(dim, 0.15, wCollapse);
   dim = mix(dim, 0.85, wCore);
+
+  // On paper the same dim values vanish: 0.15 of a dark particle on black
+  // still reads, 0.15 on white does not. Raise the floor of the range in the
+  // light theme, before the veil, so the veil still does its job.
+  dim = mix(dim, mix(0.34, 1.0, dim), uLight);
 
   // Scroll-driven veil, independent of state: pushes the field back behind
   // text that would otherwise read against a bright core.

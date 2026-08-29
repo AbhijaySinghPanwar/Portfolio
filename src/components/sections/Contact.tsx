@@ -21,17 +21,9 @@ export default function Contact() {
     <section id="contact" className="above-field shell scroll-mt-32">
       <SectionIndex index="06" label="Contact" />
 
-      <a
-        href={`mailto:${site.email}`}
-        data-magnetic=""
-        className="serif-title mt-12 block break-words"
-      >
-        Say hello
-      </a>
-
       <div className="border-hairline mt-16 border-t pt-6">
         <p className="mono mono-500 text-bone">Certifications</p>
-        <ul className="mt-6 flex flex-col">
+        <ul className="scrim mt-6 flex flex-col">
           {certifications.map((cert) => (
             <li
               key={cert.name}
@@ -46,7 +38,7 @@ export default function Contact() {
         </ul>
       </div>
 
-      <ul className="mt-24 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="scrim mt-24 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {channels.map((channel) => (
           <li key={channel.label} className="border-hairline border-t pt-4">
             <p className="mono">{channel.label}</p>
@@ -59,6 +51,14 @@ export default function Contact() {
           </li>
         ))}
       </ul>
+
+      <a
+        href={`mailto:${site.email}`}
+        data-magnetic=""
+        className="serif-title border-hairline mt-24 block break-words border-t pt-16"
+      >
+        Say hello
+      </a>
 
       <footer className="border-hairline mt-24 flex flex-wrap items-baseline justify-between gap-4 border-t py-8">
         <p className="mono">

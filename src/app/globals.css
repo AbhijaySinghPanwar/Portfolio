@@ -88,21 +88,25 @@
    the system preference is deliberately not followed.
 --------------------------------------------------------------------------- */
 :root[data-theme="light"] {
-  --color-ink: #f5f3ee;
-  --color-graphite: #e8e5de;
-  --color-hairline: #d5d1c7;
+  /* Warm paper, not white. The tones are spaced further apart than a naive
+     inversion would put them: on a dark ground the eye reads small luminance
+     steps easily, on a light one it does not, so surfaces and rules need real
+     separation or the whole page flattens into one sheet. */
+  --color-ink: #f2efe7;
+  --color-graphite: #e2ddce;
+  --color-hairline: #c3bda9;
   --color-bone: #14161a;
-  --color-muted: #6b6f77;
-  --color-iodine: #5b3fd9;
-  --color-ember: #c2410c;
+  --color-muted: #5c606a;
+  /* Deepened so the accents survive against paper. */
+  --color-iodine: #4c2fd0;
+  --color-ember: #b8380a;
 
-  /* Same percentages as the dark tints, resolved against the light ground,
-     except --muted-80. A light ground leaves --muted itself at only 4.55:1,
-     so lightening it at all drops subtitles to 3.15 and fails AA. Deepened
-     instead, which still reads clearly behind --bone. */
+  /* Same intent as the dark tints, resolved against the light ground, except
+     --muted-80. Lightening --muted on paper drops subtitles below AA, so this
+     one deepens instead. */
   --bone-88: #2f3133;
   --bone-55: #797979;
-  --muted-80: #63666e;
+  --muted-80: #52565e;
 }
 
 
@@ -271,12 +275,12 @@
   }
 
   :root[data-theme="light"] .portrait img {
-    filter: grayscale(1) contrast(1.05) brightness(1.02);
+    filter: grayscale(1) contrast(1.22) brightness(0.94);
   }
 
   :root[data-theme="light"] .portrait:hover img,
   :root[data-theme="light"] .portrait:focus-within img {
-    filter: grayscale(0.15) contrast(1.05) brightness(1);
+    filter: grayscale(0.15) contrast(1.12) brightness(1);
   }
 
   /* Iodine multiply over a light photograph muddies it; lighten instead. */
@@ -472,6 +476,12 @@
   .chip:hover {
     border-color: var(--iodine);
     color: var(--bone);
+  }
+
+  /* A 55% tint of graphite is invisible against paper. */
+  :root[data-theme="light"] .chip {
+    background: var(--graphite);
+    border-color: color-mix(in srgb, var(--hairline) 85%, transparent);
   }
 
   .chip-dot {
